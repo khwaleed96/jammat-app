@@ -7,38 +7,42 @@
         <v-row>
           <v-col cols="12">
             <v-text-field
-              v-model="name"
+              v-model="user.name"
               label="Name"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="email"
+              v-model="user.email"
               :rules="emailRules"
               label="E-mail"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="phone"
+              v-model="user.phone"
               label="Phone number"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
           <v-col cols="12">
             <v-text-field
-              v-model="postal_address"
+              v-model="user.postal_address"
               label="Postal address"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
@@ -47,7 +51,9 @@
               :items="items"
               label="Ammart"
               outlined
+              dense
               hide-details="auto"
+              v-model="user.ammart_id"
             ></v-select>
           </v-col>
           <v-col cols="6">
@@ -55,7 +61,9 @@
               :items="items"
               label="Halqa"
               outlined
+              dense
               hide-details="auto"
+              v-model="user.halqa_id"
             ></v-select>
           </v-col>
           <v-col cols="6">
@@ -63,38 +71,43 @@
               :items="items"
               label="Role"
               outlined
+              dense
+              v-model="user.user_role_id"
               hide-details="auto"
             ></v-select>
           </v-col>
           <v-col cols="6">
             <v-text-field
-              v-model="city"
+              v-model="user.city"
               label="City"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
 
           <v-col cols="12">
             <v-text-field
-              v-model="password"
+              v-model="user.password"
               :rules="passwordRules"
               label="Password"
               type="password"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
 
           <v-col cols="12">
             <v-text-field
-              v-model="confirmPassword"
+              v-model="user.password_confirmation"
               label="Confirm password"
               type="password"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
@@ -129,33 +142,50 @@ export default {
     return {
       loading: false,
       valid: true,
-      name: "",
-      email: "",
+      user: {
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        phone: "",
+        postal_address: "",
+        jammat: "",
+        ammart_id: "",
+        halqa_id: "",
+        status: "",
+        user_role_id: "",
+        city: "",
+      },
       emailRules: [
         (v) => !!v || "E-mail is required",
         (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
       ],
-      password: "",
       passwordRules: [
         (v) => !!v || "Name is required",
         (v) => (v && v.length <= 8) || "Name must be less than 8 characters",
         (v) => v != this.password || "Password did not match.",
       ],
-      confirmPassword: "",
-      phone: "",
-      postal_address: "",
-      jammat: "",
-      ammart_id: "",
-      halqa_id: "",
-      status: "",
-      user_role_id: "",
-      city: "",
       items: [1, 2, 3, 4],
     };
   },
 
   methods: {
-    login() {},
+    login() {
+      const validate = this.$refs.form.validate();
+      if (validate) {
+        const payload = this.user;
+        this.$store
+          .dispatch("login", payload)
+          .then((resp) => {
+            if (resp) {
+              this.$router.push({ name: "login" });
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
   },
 };
 </script>
