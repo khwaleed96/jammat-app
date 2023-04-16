@@ -12,6 +12,7 @@
               label="E-mail"
               required
               outlined
+              dense
               hide-details="auto"
             ></v-text-field>
           </v-col>
@@ -21,6 +22,7 @@
               :rules="passwordRules"
               label="Password"
               type="password"
+              dense
               outlined
               required
               hide-details="auto"

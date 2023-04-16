@@ -1,6 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
+import store from "../store";
+
 import welcome from "../views/Welcome.vue";
 
 import login from "../views/Login.vue";
@@ -78,6 +80,18 @@ router.afterEach((to, from) => {
   Vue.nextTick(() => {
     document.title = to.meta.title || DEFAULT_TITLE;
   });
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some((record) => record.meta.auth)) {
+    if (store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    next("/login");
+  } else {
+    next();
+  }
 });
 
 export default router;
